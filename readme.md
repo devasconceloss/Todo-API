@@ -34,14 +34,21 @@ You can change the port for whatever you want using:
 This is the schema used by now, date for creation and finalization of the todos will be used in the future.
 
 ```commandline,
-[
-    {
-        "id": int,
-        "title": "string",
-        "category": "string",
-        "done": boolean
-    }
-]
+
+{
+  "0": {
+    "id": int,
+    "title": "string",
+    "category": "string",
+    "done": true
+  },
+  "1": {
+    "id": int,
+    "title": "string",
+    "category": "string",
+    "done": true
+  }
+}
 ```
 
 ## End Points
