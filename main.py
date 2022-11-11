@@ -54,7 +54,7 @@ async def update_todo_by_id(id_todo: int, todo: Todo):
 async def create_todo(todo: Todo):
     try:
         todos[len(todos)] = todo
-    except TypeError
+    except TypeError:
         return TypeError
     finally:
         return todo
