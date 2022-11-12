@@ -2,6 +2,15 @@
 
 REST API designed in FastAPI for Todo APP
 
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Root EndPoint](#root-endpoint)
+- [Schema](#schema)
+- [Todo Model](#todo-model)
+- [End Points](#end-points)
+- [Documentation](#documentation)
+- [API Functions](#api-functions)
+
 ## Requirements
 Python 3.7+, FastAPI package and ASGI Server.
 
@@ -14,10 +23,10 @@ Check your python and pip version:
 
 ```pip install fastapi```
 
-```pip install "uvicorn[standard]```
+```pip install "uvicorn[standard]"```
 
 
-## Root End Point
+## Root EndPoint
 ```http://127.0.0.1:8000/```
 
 You can change the port for whatever you want using:
