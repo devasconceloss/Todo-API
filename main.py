@@ -1,21 +1,47 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:8000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 todos = {
     0: {
         "id": 1,
-        "title": "string",
-        "category": "string",
-        "done": True
+        "title": "Read a book",
+        "category": "Other",
+        "done": False
     },
     1: {
         "id": 2,
-        "title": "test",
-        "category": "work",
+        "title": "Go to the Doc",
+        "category": "Health",
+        "done": True
+    },
+    2: {
+        "id": 3,
+        "title": "Learn Angular",
+        "category": "Work",
         "done": False
+    },
+    3: {
+        "id": 4,
+        "title": "Learn FastAPI",
+        "category": "Work",
+        "done": True
     }
 }
 
