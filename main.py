@@ -12,7 +12,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -81,7 +81,9 @@ async def create_todo(todo: Todo):
     try:
         todos[len(todos)] = todo
     except TypeError:
-        return TypeError
+        print(TypeError)
+        raise HTTPException(status_code=422, detail="Unprocessable Entity")
+
     finally:
         return todo
 
@@ -96,15 +98,12 @@ async def update_todo_field(id_todo: int, id_field: int, new_value: str):
     }
 
     field_to_be_changed = keys_map[id_field]
-
     if id_todo in todos.keys():
         todo_to_be_updated = todos[id_todo]
         if id_field == 1:
             new_value = int(new_value)
     todo_to_be_updated[field_to_be_changed] = new_value
     return todo_to_be_updated
-
-
 
 
 @app.delete("/todo/{id_todo}")
