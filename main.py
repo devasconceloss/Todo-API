@@ -18,32 +18,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-todos = {
-    0: {
-        "id": 1,
-        "title": "Read a book",
-        "category": "Other",
-        "done": False
-    },
-    1: {
-        "id": 2,
-        "title": "Go to the Doc",
-        "category": "Health",
-        "done": True
-    },
-    2: {
-        "id": 3,
-        "title": "Learn Angular",
-        "category": "Work",
-        "done": False
-    },
-    3: {
-        "id": 4,
-        "title": "Learn FastAPI",
-        "category": "Work",
-        "done": True
-    }
+Todos = {
+    "todos": [
+        {
+            "id": 1,
+            "title": "Read a book",
+            "category": "Other",
+            "done": False
+        },
+        {
+            "id": 2,
+            "title": "Go to the Doc",
+            "category": "Health",
+            "done": True
+        },
+        {
+            "id": 3,
+            "title": "Learn Angular",
+            "category": "Work",
+            "done": False
+        },
+        {
+            "id": 4,
+            "title": "Learn FastAPI",
+            "category": "Work",
+            "done": True
+        }
+    ]
 }
+
+todo_data = Todos['todos']
 
 
 class Todo(BaseModel):
@@ -55,37 +59,40 @@ class Todo(BaseModel):
 
 @app.get("/")
 async def home():
-    return todos
+    return Todos
 
 
 @app.get("/todo/{id_todo}", response_model=Todo)
 async def get_todos_by_id(id_todo: int):
-    if id_todo in todos.keys():
-        return todos[id_todo]
-    else:
+    for todo in todo_data:
+        for val in todo.values():
+            if val == id_todo:
+                return todo
+    if id_todo not in todo.values():
         raise HTTPException(status_code=404, detail="Item not Found")
 
 
 @app.put("/todo/{id_todo}", response_model=Todo)
-async def update_todo_by_id(id_todo: int, todo: Todo):
-    if id_todo in todos.keys():
-        updated_todo = jsonable_encoder(todo)
-        todos[id_todo] = updated_todo
-        return updated_todo
-    else:
-        raise HTTPException(status_code=404, detail="Item not found")
+async def update_todo_by_id(id_todo: int, new_todo: Todo):
+    for todo in todo_data:
+        for val in todo.values():
+            if val == id_todo:
+                Todos["todos"][id_todo - 1] = new_todo
+                return new_todo
+    if id_todo not in todo.values():
+        raise HTTPException(status_code=404, detail="Item not Found")
 
 
 @app.post("/todo/", response_model=Todo)
-async def create_todo(todo: Todo):
+async def create_todo(created_todo: Todo):
     try:
-        todos[len(todos)] = todo
+        todo_data.append(created_todo)
     except TypeError:
         print(TypeError)
         raise HTTPException(status_code=422, detail="Unprocessable Entity")
 
     finally:
-        return todo
+        return created_todo
 
 
 @app.patch("/todo/{id_todo}")
