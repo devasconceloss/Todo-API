@@ -90,9 +90,10 @@ async def create_todo(created_todo: Todo):
     finally:
         return created_todo
 
-"""
+
 @app.patch("/todo/{id_todo}")
 async def update_todo_field(id_todo: int, id_field: int, new_value: str):
+    todo_to_be_updated: Todo
     keys_map = {
         1: "id",
         2: "title",
@@ -101,13 +102,18 @@ async def update_todo_field(id_todo: int, id_field: int, new_value: str):
     }
 
     field_to_be_changed = keys_map[id_field]
-    if id_todo in todos.keys():
-        todo_to_be_updated = todos[id_todo]
-        if id_field == 1:
-            new_value = int(new_value)
-    todo_to_be_updated[field_to_be_changed] = new_value
-    return todo_to_be_updated
-"""
+
+    for i in range(len(todo_data)):
+        if todo_data[i]['id'] == id_todo:
+            todo_to_be_updated = todo_data[i]
+            if id_field == 1:
+                new_value = int(new_value)
+
+            todo_to_be_updated[field_to_be_changed] = new_value
+            todo_data[i] = todo_to_be_updated
+            return todo_data[i]
+    else:
+        raise HTTPException(status_code=404, detail="Item not Found")
 
 
 @app.delete("/todo/{id_todo}")
