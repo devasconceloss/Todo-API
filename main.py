@@ -114,7 +114,7 @@ async def update_todo_field(id_todo: int, id_field: int, new_value: str):
 async def delete_todo_by_id(id_todo: int):
     for i in range(len(todo_data)):
         if todo_data[i]['id'] == id_todo:
-            del todo_data[i]
-            break
+            todo_data.remove(todo_data[i])
+            return {"Message": "Element removed"}
     else:
         raise HTTPException(status_code=404, detail="Item not found")
