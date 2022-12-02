@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -64,22 +63,20 @@ async def home():
 
 @app.get("/todo/{id_todo}", response_model=Todo)
 async def get_todos_by_id(id_todo: int):
-    for todo in todo_data:
-        for val in todo.values():
-            if val == id_todo:
-                return todo
-    if id_todo not in todo.values():
+    for i in range(len(todo_data)):
+        if todo_data[i]['id'] == id_todo:
+            return todo_data[i]
+    else:
         raise HTTPException(status_code=404, detail="Item not Found")
 
 
 @app.put("/todo/{id_todo}", response_model=Todo)
 async def update_todo_by_id(id_todo: int, new_todo: Todo):
-    for todo in todo_data:
-        for val in todo.values():
-            if val == id_todo:
-                Todos["todos"][id_todo - 1] = new_todo
-                return new_todo
-    if id_todo not in todo.values():
+    for i in range(len(todo_data)):
+        if todo_data[i]['id'] == id_todo:
+            todo_data[i] = new_todo
+            return todo_data[i]
+    else:
         raise HTTPException(status_code=404, detail="Item not Found")
 
 
@@ -88,13 +85,12 @@ async def create_todo(created_todo: Todo):
     try:
         todo_data.append(created_todo)
     except TypeError:
-        print(TypeError)
         raise HTTPException(status_code=422, detail="Unprocessable Entity")
 
     finally:
         return created_todo
 
-
+"""
 @app.patch("/todo/{id_todo}")
 async def update_todo_field(id_todo: int, id_field: int, new_value: str):
     keys_map = {
@@ -111,12 +107,14 @@ async def update_todo_field(id_todo: int, id_field: int, new_value: str):
             new_value = int(new_value)
     todo_to_be_updated[field_to_be_changed] = new_value
     return todo_to_be_updated
+"""
 
 
 @app.delete("/todo/{id_todo}")
 async def delete_todo_by_id(id_todo: int):
-    if id_todo in todos.keys():
-        del todos[id_todo]
-        return todos
+    for i in range(len(todo_data)):
+        if todo_data[i]['id'] == id_todo:
+            del todo_data[i]
+            break
     else:
         raise HTTPException(status_code=404, detail="Item not found")
