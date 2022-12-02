@@ -3,7 +3,8 @@
 REST API designed in FastAPI for Todo APP
 
 - [Requirements](#requirements)
-- [Installation](#installation)
+- [Installation](#installation-)
+- [Run Server](#run-server-)
 - [Root EndPoint](#root-endpoint)
 - [Schema](#schema)
 - [Todo Model](#todo-model)
@@ -26,6 +27,11 @@ Check your python and pip version:
 ```pip install "uvicorn[standard]"```
 
 
+## Run Server:
+```commandline
+uvicorn archive-name:app --reload
+```
+
 ## Root EndPoint
 ```http://127.0.0.1:8000/```
 
@@ -43,21 +49,24 @@ You can change the port for whatever you want using:
 This is the schema used by now, date for creation and finalization of the todos will be used in the future.
 
 ```commandline,
+Todos = {
+    "todos": [
+        {
+            "id": 1,
+            "title": "Read a book",
+            "category": "Other",
+            "done": False
+        },
+        {
+            "id": 2,
+            "title": "Go to the Doc",
+            "category": "Health",
+            "done": True
+        }
+    
+    ]
+ }
 
-{
-  0: {
-    "id": int,
-    "title": "string",
-    "category": "string",
-    "done": bool
-  },
-  1: {
-    "id": int,
-    "title": "string",
-    "category": "string",
-    "done": bool
-  }
-}
 ```
 
 ## End Points
@@ -66,7 +75,7 @@ This is the schema used by now, date for creation and finalization of the todos 
 |---------|-----------------|-----------------------------|
 | GET     | /               | List all todos              |
 | GET     | /todo/{id_todo} | List todo by id             |
-| PUT     | /todo/          | Update todo by id           |
+| PUT     | /todo/{id_todo} | Update todo by id           |
 | Delete  | /todo/{id_todo} | Delete todo by id           |
 | Patch   | /todo/{id_todo} | Partial update by Field Id  |
 | POST    | /todo/          | Create todo                 |
@@ -108,20 +117,22 @@ http://127.0.0.1:8000/
 
 Response body
 ```
-  {
-  "0": {
-    "id": 1,
-    "title": "string",
-    "category": "string",
-    "done": true
-  },
-  "1": {
-    "id": 2,
-    "title": "test",
-    "category": "work",
-    "done": false
-  }
-}
+{
+    "todos": [
+        {
+            "id": 1,
+            "title": "Read a book",
+            "category": "Other",
+            "done": False
+        },
+        {
+            "id": 2,
+            "title": "Go to the Doc",
+            "category": "Health",
+            "done": True
+        }
+        ]
+    }
 ```
 
 
@@ -248,10 +259,10 @@ http://127.0.0.1:8000/todo/{id_todo}?id_field={id_field}&new_value={new_value}
 Response body
 ````commandline
 {
-  "id": 10,
-  "title": "aa",
-  "category": "work",
-  "done": "true"
+  "id": int,
+  "title": "string",
+  "category": "stirng",
+  "done": bool
 }
 ````
 
