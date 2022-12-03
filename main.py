@@ -101,19 +101,22 @@ async def update_todo_field(id_todo: int, id_field: int, new_value: str):
         4: "done"
     }
 
-    field_to_be_changed = keys_map[id_field]
+    for key in keys_map.keys():
+        if id_field == key:
+            field_to_be_changed = keys_map[id_field]
+            for i in range(len(todo_data)):
+                if todo_data[i]['id'] == id_todo:
+                    todo_to_be_updated = todo_data[i]
+                    if id_field == 1:
+                        new_value = int(new_value)
 
-    for i in range(len(todo_data)):
-        if todo_data[i]['id'] == id_todo:
-            todo_to_be_updated = todo_data[i]
-            if id_field == 1:
-                new_value = int(new_value)
-
-            todo_to_be_updated[field_to_be_changed] = new_value
-            todo_data[i] = todo_to_be_updated
-            return todo_data[i]
+                    todo_to_be_updated[field_to_be_changed] = new_value
+                    todo_data[i] = todo_to_be_updated
+                    return todo_data[i]
+            else:
+                raise HTTPException(status_code=404, detail="Item not Found")
     else:
-        raise HTTPException(status_code=404, detail="Item not Found")
+        return {'Message': 'Id field out of range'}
 
 
 @app.delete("/todo/{id_todo}")
