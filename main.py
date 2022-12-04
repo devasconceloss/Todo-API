@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-Todos = {
+database = {
     "todos": [
         {
             "id": 1,
@@ -46,7 +46,7 @@ Todos = {
     ]
 }
 
-todo_data = Todos['todos']
+todo_data = database['todos']
 
 
 class Todo(BaseModel):
@@ -58,7 +58,7 @@ class Todo(BaseModel):
 
 @app.get("/")
 async def home():
-    return Todos
+    return database
 
 
 @app.get("/todo/{id_todo}", response_model=Todo)
