@@ -11,7 +11,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -19,30 +19,7 @@ app.add_middleware(
 
 database = {
     "todos": [
-        {
-            "id": 1,
-            "title": "Read a book",
-            "category": "Other",
-            "done": False
-        },
-        {
-            "id": 2,
-            "title": "Go to the Doc",
-            "category": "Health",
-            "done": True
-        },
-        {
-            "id": 3,
-            "title": "Learn Angular",
-            "category": "Work",
-            "done": False
-        },
-        {
-            "id": 4,
-            "title": "Learn FastAPI",
-            "category": "Work",
-            "done": True
-        }
+
     ]
 }
 
@@ -64,7 +41,7 @@ async def home():
 @app.get("/todo/{id_todo}", response_model=Todo)
 async def get_todos_by_id(id_todo: int):
     for i in range(len(todo_data)):
-        if todo_data[i]['id'] == id_todo:
+        if database['todos'][i]['id'] == id_todo:
             return todo_data[i]
     else:
         raise HTTPException(status_code=404, detail="Item not Found")
@@ -121,9 +98,9 @@ async def update_todo_field(id_todo: int, id_field: int, new_value: str):
 
 @app.delete("/todo/{id_todo}")
 async def delete_todo_by_id(id_todo: int):
-    for i in range(len(todo_data)):
-        if todo_data[i]['id'] == id_todo:
-            todo_data.remove(todo_data[i])
+    for i in range(len(database['todos'])):
+        if database['todos'][i]['id'] == id_todo:
+            database['todos'].remove(database['todos'][i])
             return {"Message": "Element removed"}
     else:
         raise HTTPException(status_code=404, detail="Item not found")
