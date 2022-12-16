@@ -2,7 +2,7 @@
 
 REST API designed in FastAPI for Todo APP
 
-- [Requirements](#requirements)
+- [Environment](#environment)
 - [Installation](#installation-)
 - [Run Server](#run-server-)
 - [Root EndPoint](#root-endpoint)
@@ -12,19 +12,14 @@ REST API designed in FastAPI for Todo APP
 - [Documentation](#documentation)
 - [API Functions](#api-functions)
 
-## Requirements
-Python 3.7+, FastAPI package and ASGI Server.
-
-Check your python and pip version:
-
-```python --version```
-```pip --version or -V```
+## Environment
+To start the environment go to the terminal and type:
+```commandline
+source venv/bin/activate
+```
 
 ## Installation:
-
-```pip install fastapi```
-
-```pip install "uvicorn[standard]"```
+All the packages are installed on the environment
 
 
 ## Run Server:
@@ -49,37 +44,37 @@ You can change the port for whatever you want using:
 This is the schema used by now, date for creation and finalization of the todos will be used in the future.
 
 ```commandline,
-Todos = {
-    "todos": [
+{
+    "status": "OK",
+    "code": "200",
+    "message": "Fetched all data",
+    "result": [
         {
-            "id": 1,
-            "title": "Read a book",
-            "category": "Other",
-            "done": False
+            "title": "string",
+            "category": "string",
+            "done": boolean,
+            "id": int
         },
         {
-            "id": 2,
-            "title": "Go to the Doc",
-            "category": "Health",
-            "done": True
+            "title": "string",
+            "category": "string",
+            "done": boolean,
+            "id": int
         }
-    
     ]
- }
-
+}
 ```
 
 ## End Points
 
-| Command | End Point       | Description                 |
-|---------|-----------------|-----------------------------|
-| GET     | /               | List all todos              |
-| GET     | /todo/{id_todo} | List todo by id             |
-| PUT     | /todo/{id_todo} | Update todo by id           |
-| Delete  | /todo/{id_todo} | Delete todo by id           |
-| Patch   | /todo/{id_todo} | Partial update by Field Id  |
-| POST    | /todo/          | Create todo                 |
-
+| Command | End Point        | Description                   |
+|---------|------------------|-------------------------------|
+| GET     | /                | Get All Todos                 |
+| GET     | /todos/{id_todo} | Get Todo By Id                |
+| Delete  | /todos/{id_todo} | Delete Todo                   |
+| Patch   | /todos/{id_todo} | Finishing Todo                |
+| POST    | /todos           | Create todo                   |
+| GET     | /highest_id      | Get Highest Id on Database    |
 
 ## Documentation
 
@@ -88,18 +83,18 @@ Todos = {
 ## API Functions
 
 - [GET /](#get-) 
-- [GET /todo/{id_todo}](#get-todoid_todo)
-- [PUT](#put-todoid_todo)
-- [DELETE](#delete-todoid_todo)
-- [PATCH](#patch-todoid_todo)
-- [POST](#post-todo)
-
-
+- [GET /todos/{id_todo}](#get-todostodoid)
+- [DELETE](#delete-todostodoid)
+- [PATCH](#patch-todosidtodo)
+- [POST](#post-todos)
+- [GET](#get-highestid)
 
 
 ## GET /
 
-* _No parameters_
+* _Optional parameters:_
+  * Skip: integer - Default = 0;
+  * Limit: integer - Default = 100;
 * _No request body_
 
 Curl
@@ -116,28 +111,31 @@ http://127.0.0.1:8000/
 ```
 
 Response body
-```
+```commandline,
 {
-    "todos": [
+    "status": "OK",
+    "code": "200",
+    "message": "Fetched all data",
+    "result": [
         {
-            "id": 1,
-            "title": "Read a book",
-            "category": "Other",
-            "done": False
+            "title": "string",
+            "category": "string",
+            "done": boolean,
+            "id": int
         },
         {
-            "id": 2,
-            "title": "Go to the Doc",
-            "category": "Health",
-            "done": True
+            "title": "string",
+            "category": "string",
+            "done": boolean,
+            "id": int
         }
-        ]
-    }
+    ]
+}
 ```
 
 
 
-## GET /todo/{id_todo}
+## GET /todos/{todo_id}
 
 Required:
 * _id_todo_
@@ -146,72 +144,42 @@ Required:
 Curl
 ````commandline
 curl -X 'GET' \
-'http://127.0.0.1:8000/todo/{id_todo}' \
+'http://127.0.0.1:8000/todo/{todo_id}' \
 -H 'accept: application/json'
 
 ````
 
 Request URL:
 ```
-http://127.0.0.1:8000/todo/{id_todo}
+http://127.0.0.1:8000/todos/{todo_id}
 ```
 
 
 Response:
 ````commandline
 {
-  "id": int,
-  "title": "string",
-  "category": "string",
-  "done": bool
+  "status": "OK",
+  "code": "200",
+  "message": "Fetched the selected data",
+  "result": {
+    "title": "string",
+    "category": "string",
+    "done": boolean,
+    "id": int
+  }
 }
 ````
 
-
-# PUT /todo/{id_todo}
-
-Required:
-* _id_todo_
-* _Request body_
-
-Curl
-````commandline
-curl -X 'PUT' \
-  'http://127.0.0.1:8000/todo/1' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "id": 2,
-  "title": "testando",
-  "category": "string",
-  "done": false
-}
-````
-
-Request URL
-```
-http://127.0.0.1:8000/todo/{id_todo}
-```
-
-Response body
-```
-{
-  "id": int,
-  "title": "string",
-  "category": "string",
-  "done": bool
-}
-```
-# DELETE /todo/{id_todo}
+# DELETE /todos/{todo_id}
 
 Required:
-* _id_todo_
+* _todo_id: integer (path)_
 
 
 Curl
 ````commandline
 curl -X 'DELETE' \
-  'http://127.0.0.1:8000/todo/{id_todo}' \
+  'http://127.0.0.1:8000/todo/{todo_id}' \
   -H 'accept: application/json' \
 ````
 
@@ -221,39 +189,38 @@ http://127.0.0.1:8000/todo/{id_todo}
 ```
 
 Response body
-````
+```
 {
-  "0": {
+  "status": "OK",
+  "code": "200",
+  "message": "Todo deleted",
+  "result": null
+}
+```
+
+# PATCH /todos/{id_todo}
+_Request body:_
+```
+{
+  "parameter": {
     "id": int,
     "title": "string",
     "category": "string",
-    "done": bool
-  },
-  "1": {
-  "id": int,
-  "title": "string",
-  "category": "string",
-  "done": bool
+    "done": true
   }
 }
-````
-
-# PATCH /todo/{id_todo}
-Required:
-* _id_todo_
-* _id_field_
-* _new_value_
+```
 
 Curl 
 ````commandline
 curl -X 'PATCH' \
-'http://127.0.0.1:8000/todo/1?id_field=4&new_value=true' \
+'http://127.0.0.1:8000/todos/{todo_id}' \
 -H 'accept: application/json'
 ````
 
 Request URL 
 ````commandline
-http://127.0.0.1:8000/todo/{id_todo}?id_field={id_field}&new_value={new_value}
+http://127.0.0.1:8000/todos/{todo_id}
 ````
 
 Response body
@@ -266,29 +233,33 @@ Response body
 }
 ````
 
-# POST /todo/
+# POST /todos
 
 Request Body 
 ````commandline
 {
-  "id": 4,
-  "title": "string",
-  "category": "string",
-  "done": true
+  "parameter": {
+    "id": int,
+    "title": "string",
+    "category": "string",
+    "done": true
+  }
 }
 ````
 
 Curl
 ````commandline
 curl -X 'POST' \
-  'http://127.0.0.1:8000/todo/' \
+  'http://localhost:8000/todos' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": int,
-  "title": "string",
-  "category": "string",
-  "done": bool
+  "parameter": {
+    "id": int,
+    "title": "string",
+    "category": "string",
+    "done": true
+  }
 }'
 ````
 
@@ -296,9 +267,33 @@ Response body
 
 ````commandline
 {
-  "id": int,
-  "title": "string",
-  "category": "string",
-  "done": bool
+  "status": "Created Todo",
+  "code": "201",
+  "message": "Todo created successfully",
+  "result": null
 }
 ````
+
+## GET /highest_id
+
+* _No parameters_
+
+Curl
+
+```commandline
+curl -X 'GET' \
+  'http://localhost:8000/highest_id' \
+  -H 'accept: application/json'
+```
+
+Request URL:
+```commandline
+http://localhost:8000/highest_id
+```
+
+Response body:
+```
+{
+  "highest_id": int
+}
+``
