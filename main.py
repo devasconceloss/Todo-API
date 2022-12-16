@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.include_router(router, tags=["todo"])
+app.include_router(router)
 
 app.add_middleware(
     CORSMiddleware,
