@@ -1,6 +1,8 @@
+import psycopg2
 from sqlalchemy.orm import Session
 from models import Todo
 from schemas import TodoSchema
+from settings import settings
 
 
 def get_todos(db: Session, skip: int = 0, limit: int = 100):
@@ -43,14 +45,25 @@ def update_todo(db: Session, todo_id: int, title: str, category: str, done: bool
     return todo_to_be_updated
 
 
-def finishing_todo(db: Session, todo_id: int, title: str, category: str, done: bool = True):
+def finishing_todo(db: Session, todo_id: int):
     todo_finished = get_todo_by_id(db=db, todo_id=todo_id)
 
-    todo_finished.id = todo_id
-    todo_finished.title = title
-    todo_finished.category = category
-    todo_finished.done = done
+    todo_finished.done = True
 
     db.commit()
     db.refresh(todo_finished)
     return todo_finished
+
+
+def get_highest_id():
+    sqlalchemy_db_url = settings.Database_url
+    connection = psycopg2.connect(sqlalchemy_db_url)
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT MAX(id) FROM todo')
+    highest_id: int = cursor.fetchone()[0]
+
+    cursor.close()
+    connection.close()
+
+    return highest_id
