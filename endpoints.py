@@ -51,8 +51,8 @@ async def create_todo(request: RequestTodo, db: Session = Depends(get_data_base)
     )
 
 
-@router.delete("/todos/{todo_id}")
-async def delete_book(todo_id: int,  db: Session = Depends(get_data_base)):
+@router.delete("/todos/{todo_id}", tags=['todos'])
+async def delete_todo(todo_id: int,  db: Session = Depends(get_data_base)):
     crud_functions.deleted_todo(db, todo_id=todo_id)
     return Response(
         status="OK",
@@ -61,14 +61,14 @@ async def delete_book(todo_id: int,  db: Session = Depends(get_data_base)):
     )
 
 
-@router.patch("/todos/{todo_id}")
+@router.patch("/todos/{todo_id}", tags=['todos'])
 async def updating_todo(request: RequestTodo, db: Session = Depends(get_data_base)):
     todo_to_be_updated: TodoSchema = crud_functions.get_todo_by_id(db, todo_id=request.parameter.id)
 
     return todo_to_be_updated
 
 
-@router.patch("/todos/{todo_id}")
+@router.patch("/todos/{todo_id}", tags=['todos'])
 async def finishing_todo(request: RequestTodo, db: Session = Depends(get_data_base)):
     todo_done = crud_functions.finishing_todo(
         db=db,
@@ -85,7 +85,7 @@ async def finishing_todo(request: RequestTodo, db: Session = Depends(get_data_ba
         raise HTTPException(status_code=404, detail="Item not found")
 
 
-@router.get("/highest_id")
+@router.get("/highest_id", tags=['id'])
 async def get_highest_id():
     highest_id = crud_functions.get_highest_id()
     return {"highest_id": highest_id}
