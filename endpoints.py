@@ -62,20 +62,17 @@ async def delete_book(todo_id: int,  db: Session = Depends(get_data_base)):
 
 
 @router.patch("/todos/{todo_id}")
-async def updating_todo(request: RequestTodo, todo_id: int, db: Session = Depends(get_data_base)):
+async def updating_todo(request: RequestTodo, db: Session = Depends(get_data_base)):
     todo_to_be_updated: TodoSchema = crud_functions.get_todo_by_id(db, todo_id=request.parameter.id)
 
     return todo_to_be_updated
 
 
-@router.put("/todos/{todo_id}")
+@router.patch("/todos/{todo_id}")
 async def finishing_todo(request: RequestTodo, db: Session = Depends(get_data_base)):
     todo_done = crud_functions.finishing_todo(
         db=db,
         todo_id=request.parameter.id,
-        title=request.parameter.title,
-        category=request.parameter.category,
-        done=request.parameter.done
     )
 
     if todo_done:
@@ -86,3 +83,9 @@ async def finishing_todo(request: RequestTodo, db: Session = Depends(get_data_ba
         )
     else:
         raise HTTPException(status_code=404, detail="Item not found")
+
+
+@router.get("/highest_id")
+async def get_highest_id():
+    highest_id = crud_functions.get_highest_id()
+    return {"highest_id": highest_id}
