@@ -83,11 +83,11 @@ This is the schema used by now, date for creation and finalization of the todos 
 ## API Functions
 
 - [GET /](#get-) 
-- [GET /todos/{id_todo}](#get-todostodoid)
-- [DELETE](#delete-todostodoid)
-- [PATCH](#patch-todosidtodo)
-- [POST](#post-todos)
-- [GET](#get-highestid)
+- [GET /todos/{todo_id}](#get-todostodoid)
+- [DELETE /todos/{todo_id}](#delete-todostodoid)
+- [PATCH /todos{todo_id}](#patch-todosidtodo)
+- [POST /todos](#post-todos)
+- [GET /highest_id](#get-highestid)
 
 
 ## GET /
