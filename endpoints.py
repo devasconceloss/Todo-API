@@ -43,11 +43,13 @@ async def get_todo_by_id(todo_id: int, db: Session = Depends(get_data_base)):
 
 @router.post("/todos", tags=["todos"])
 async def create_todo(request: RequestTodo, db: Session = Depends(get_data_base)):
-    crud_functions.create_todo(db=db, todo=request.parameter)
+    new_todo = crud_functions.create_todo(db=db, todo=request.parameter)
     return Response(
         status="Created Todo",
-        code="201",
-        message="Todo created successfully"
+        code="200",
+        message="Todo created successfully",
+        result=new_todo
+
     )
 
 
@@ -68,24 +70,22 @@ async def updating_todo(request: RequestTodo, db: Session = Depends(get_data_bas
     return todo_to_be_updated
 
 
-@router.patch("/todos/{todo_id}", tags=['todos'])
-async def finishing_todo(request: RequestTodo, db: Session = Depends(get_data_base)):
+@router.patch("/todos/finish/{todo_id}", tags=['todos'])
+async def finishing_todo(todo_id: int, db: Session = Depends(get_data_base)):
     todo_done = crud_functions.finishing_todo(
-        db=db,
-        todo_id=request.parameter.id,
+        db,
+        todo_id=todo_id
     )
 
-    if todo_done:
-        return Response(
-            status="Accepted",
-            code="202",
-            result=todo_done
-        )
-    else:
-        raise HTTPException(status_code=404, detail="Item not found")
+    return Response(
+        status="Accepted",
+        code="202",
+        message='Todo is completed',
+        result=todo_done
+    )
 
 
 @router.get("/highest_id", tags=['id'])
 async def get_highest_id():
-    highest_id = crud_functions.get_highest_id()
-    return {"highest_id": highest_id}
+    highest_id = int(crud_functions.get_highest_id())
+    return highest_id
