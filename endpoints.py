@@ -55,12 +55,16 @@ async def create_todo(request: RequestTodo, db: Session = Depends(get_data_base)
 
 @router.delete("/todos/{todo_id}", tags=['todos'])
 async def delete_todo(todo_id: int,  db: Session = Depends(get_data_base)):
-    crud_functions.deleted_todo(db, todo_id=todo_id)
-    return Response(
-        status="OK",
-        code="200",
-        message="Todo deleted"
-    )
+    deleted_todo = crud_functions.deleted_todo(db, todo_id=todo_id)
+    if deleted_todo is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    else:
+        return Response(
+            status="OK",
+            code="200",
+            message="Todo deleted"
+        )
 
 
 @router.patch("/todos/{todo_id}", tags=['todos'])
@@ -76,13 +80,16 @@ async def finishing_todo(todo_id: int, db: Session = Depends(get_data_base)):
         db,
         todo_id=todo_id
     )
+    if todo_done is None:
+        raise HTTPException(status_code=404, detail="Item not found")
 
-    return Response(
-        status="Accepted",
-        code="202",
-        message='Todo is completed',
-        result=todo_done
-    )
+    else:
+        return Response(
+            status="Accepted",
+            code="202",
+            message='Todo is completed',
+            result=todo_done
+        )
 
 
 @router.get("/highest_id", tags=['id'])
