@@ -70,6 +70,9 @@ def get_highest_id():
     cursor.execute('SELECT MAX(id) FROM todo')
     highest_id: int = cursor.fetchone()[0]
 
+    if highest_id is None:
+        highest_id = 0
+
     cursor.close()
     connection.close()
 
