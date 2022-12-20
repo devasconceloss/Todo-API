@@ -29,8 +29,12 @@ def create_todo(db: Session, todo: TodoSchema):
 
 def deleted_todo(db: Session, todo_id: int):
     todo_to_be_deleted = get_todo_by_id(db=db, todo_id=todo_id)
-    db.delete(todo_to_be_deleted)
-    db.commit()
+    if todo_to_be_deleted is None:
+        return None
+    else:
+        db.delete(todo_to_be_deleted)
+        db.commit()
+        return True
 
 
 def update_todo(db: Session, todo_id: int, title: str, category: str, done: bool):
@@ -47,6 +51,9 @@ def update_todo(db: Session, todo_id: int, title: str, category: str, done: bool
 
 def finishing_todo(db: Session, todo_id: int):
     todo_finished = get_todo_by_id(db=db, todo_id=todo_id)
+
+    if todo_finished is None:
+        return None
 
     todo_finished.done = True
 
