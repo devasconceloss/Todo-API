@@ -26,6 +26,6 @@ class RequestTodo(BaseModel):
 class Response(GenericModel, Generic[T]):
     status: str
     code: str
-    message: str
+    message: Optional[T]
     result: Optional[T]
     
