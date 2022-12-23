@@ -10,6 +10,10 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.include_router(router)
 
+origins = ['localhost:4200',
+           'localhost:8000',
+           'https://thiagovasc.github.io/Todo-App/']
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
