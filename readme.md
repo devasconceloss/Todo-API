@@ -67,14 +67,15 @@ This is the schema used by now, date for creation and finalization of the todos 
 
 ## End Points
 
-| Command | End Point        | Description                   |
-|---------|------------------|-------------------------------|
-| GET     | /                | Get All Todos                 |
-| GET     | /todos/{id_todo} | Get Todo By Id                |
-| Delete  | /todos/{id_todo} | Delete Todo                   |
-| Patch   | /todos/{id_todo} | Finishing Todo                |
-| POST    | /todos           | Create todo                   |
-| GET     | /highest_id      | Get Highest Id on Database    |
+| Command | End Point               | Description                |
+|---------|-------------------------|----------------------------|
+| GET     | /                       | Get All Todos              |
+| GET     | /todos/{id_todo}        | Get Todo By Id             |
+| Delete  | /todos/{id_todo}        | Delete Todo                |
+| Patch   | /todos/finish/{id_todo} | Finishing Todo             |
+| Patch   | /todos/reopen/{id_todo} | Reopening Todo             |
+| POST    | /todos                  | Create todo                |
+| GET     | /highest_id             | Get Highest Id on Database |
 
 ## Documentation
 
@@ -85,7 +86,8 @@ This is the schema used by now, date for creation and finalization of the todos 
 - [GET /](#get-) 
 - [GET /todos/{todo_id}](#get-todostodoid)
 - [DELETE /todos/{todo_id}](#delete-todostodoid)
-- [PATCH /todos{todo_id}](#patch-todosidtodo)
+- [PATCH /todos/finish/{todo_id}](#patch-todosfinishtodoid)
+- [PATCH /todos/reopen/{todo_id}](#patch-todosreopentodoid)
 - [POST /todos](#post-todos)
 - [GET /highest_id](#get-highestid)
 
@@ -198,7 +200,7 @@ Response body
 }
 ```
 
-# PATCH /todos/{id_todo}
+# PATCH /todos/finish/{todo_id}
 _Request body:_
 ```
 {
@@ -220,18 +222,64 @@ curl -X 'PATCH' \
 
 Request URL 
 ````commandline
-http://127.0.0.1:8000/todos/{todo_id}
+http://127.0.0.1:8000/todos/finish/{todo_id}
 ````
 
 Response body
 ````commandline
 {
-  "id": int,
-  "title": "string",
-  "category": "stirng",
-  "done": bool
+  "status": "Accepted",
+  "code": "202",
+  "message": "Todo is completed",
+  "result": {
+    "title": "asuhuash",
+    "category": "Work",
+    "done": true,
+    "id": 2
+  }
 }
 ````
+# PATCH /todos/reopen/{todo_id}
+
+_Request body:_
+```
+{
+  "parameter": {
+    "id": int,
+    "title": "string",
+    "category": "string",
+    "done": true
+  }
+}
+```
+
+Curl 
+````commandline
+curl -X 'PATCH' \
+'http://127.0.0.1:8000/todos/reopen/{todo_id}' \
+-H 'accept: application/json'
+````
+
+Request URL 
+````commandline
+http://127.0.0.1:8000/todos/reopen/{todo_id}
+````
+
+Response body
+````commandline
+{
+  "status": "Accepted",
+  "code": "202",
+  "message": "Todo is reopened",
+  "result": {
+    "title": "asuhuash",
+    "category": "Work",
+    "done": false,
+    "id": 2
+  }
+}
+````
+
 
 # POST /todos
 
@@ -294,6 +342,6 @@ http://localhost:8000/highest_id
 Response body:
 ```
 {
-  "highest_id": int
+  int
 }
 ``
