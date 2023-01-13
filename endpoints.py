@@ -92,6 +92,24 @@ async def finishing_todo(todo_id: int, db: Session = Depends(get_data_base)):
         )
 
 
+@router.patch("/todos/reopen/{todo_id}", tags=['todos'])
+async def reopening_todo(todo_id: int, db: Session = Depends(get_data_base)):
+    todo_opened = crud_functions.reopening_todo(
+        db,
+        todo_id=todo_id
+    )
+    if todo_opened is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    else:
+        return Response(
+            status="Accepted",
+            code="202",
+            message='Todo is reopened',
+            result=todo_opened
+        )
+
+
 @router.get("/highest_id", tags=['id'])
 async def get_highest_id():
     highest_id = int(crud_functions.get_highest_id())

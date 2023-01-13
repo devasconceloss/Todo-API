@@ -62,6 +62,19 @@ def finishing_todo(db: Session, todo_id: int):
     return todo_finished
 
 
+def reopening_todo(db: Session, todo_id: int):
+    todo_reopened = get_todo_by_id(db=db, todo_id=todo_id)
+
+    if todo_reopened is None:
+        return None
+
+    todo_reopened.done = False
+
+    db.commit()
+    db.refresh(todo_reopened)
+    return todo_reopened
+
+
 def get_highest_id():
     sqlalchemy_db_url = settings.Database_url
     connection = psycopg2.connect(sqlalchemy_db_url)
